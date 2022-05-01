@@ -21,7 +21,7 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
     * [Secure the Blazor Server Client](#secure-the-blazor-server-client)
 
 ## 1. Creating the Solution
-**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) project with the identity provider project and all references to it stripped out.
+**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) project with the identity provider project and all references to authentication stripped out.
 
 ## 2. Securing the WebApi
 
