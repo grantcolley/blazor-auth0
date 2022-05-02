@@ -47,4 +47,37 @@ Go to [Auth0](https://auth0.com/) and create a free account.
 #### Register the Blazor Server Client with Auth0
 
 #### Secure the Blazor Server Client
-Add the nuget package package `Auth0.AspNetCore.Authentication`. More information about the package can be found at [ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/**).
+
+In [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/appsettings.json) add a section for `Auth0` and entries for `Domain` and `ClientId`.
+
+```C#
+  "Auth0": {
+    "Domain": "AUTH0_DOMAIN",
+    "ClientId": "AUTH0_CLIENTID"
+  }
+}
+```
+
+Add the nuget package package `Auth0.AspNetCore.Authentication` to the project. More information about the package can be found at [ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/**).
+
+In [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/Program.cs) call `AddAuth0WebAppAuthentication` to configure authentication and **after ** call `UseAuthentication` and `UseAuthorization` to enable middleware for authentication and authorisation.
+```C#
+
+// existing code removed for brevity
+
+builder.Services.AddAuth0WebAppAuthentication(options =>
+{
+    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.ClientId = builder.Configuration["Auth0:ClientId"];
+});
+
+// existing code removed for brevity
+
+// after UseRouting
+app.UseAuthentication();
+app.UseAuthorization();
+
+// existing code removed for brevity
+
+```
+
