@@ -47,4 +47,4 @@ Go to [Auth0](https://auth0.com/) and create a free account.
 #### Register the Blazor Server Client with Auth0
 
 #### Secure the Blazor Server Client
-
+Add the nuget package package `Auth0.AspNetCore.Authentication`. More information about the package can be found at [ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/**).
