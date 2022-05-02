@@ -59,7 +59,7 @@ In the shared **Razor** project add the `Authorize` attribute to [FetchData.razo
 ## 5. Securing the Blazor Server Client
 
 #### Register the Blazor Server Client with Auth0
-Login to [Auth0](https://auth0.com/) and go to **Applications** and click **Create Application**. Give the application a name and for **Application Type** select `Single Page Web Applications` and click **Save Changes**.
+Login to [Auth0](https://auth0.com/) and go to **Applications** and click **Create Application**. Give the application a name and for **Application Type** select `Regular Web Application` and click **Save Changes**.
 
 
 #### Secure the Blazor Server Client
