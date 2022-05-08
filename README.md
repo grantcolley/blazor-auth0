@@ -224,7 +224,7 @@ Add `[CascadingParameter] protected string AppTitle { get; set; }` to [NavMenu.r
 
 @code {
     [CascadingParameter]
-    protected string AppTitle { get; set; }
+    protected string? AppTitle { get; set; }
 
     private bool collapseNavMenu = true;
 
