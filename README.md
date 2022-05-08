@@ -155,7 +155,7 @@ app.Run();
 
 ## 4. Securing Shared Razor Components
 
-In [_Imports.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/RazorComponents/_Imports.razor) replace `@using Microsoft.AspNetCore.Components.Authorization` with `@using Microsoft.AspNetCore.Authorization`.
+In [_Imports.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/RazorComponents/_Imports.razor) add `@using Microsoft.AspNetCore.Authorization`.
 
 Replace the contents of [FetchData.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Pages/FetchData.razor) with:
 
