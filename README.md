@@ -327,7 +327,7 @@ builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>(s
 
 await builder.Build().RunAsync();
 ```
-> Note when adding the HttpClient the ports to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
+> Note when adding the HttpClient the port to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
 
 ## 6. Securing the Blazor Server Client
 
