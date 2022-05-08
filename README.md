@@ -30,6 +30,35 @@ Rename the solution file **BlazorSolutionSetup.sln** to **Blazor-Auth0.sln**.
 
 Remove the **IdentityProvider** project from the solution and delete the folder from the directory.
 
+Upgrade all projects to *net6.0*. In each *\*.proj* file:
+
+Replace
+```
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+```
+
+with
+```
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+```
+
+In the **BlazorServerApp.csproj** project remove the following package references:
+```
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.4" />
+  </ItemGroup>
+```
+
+For all projects upgrade the package references to the latest stable version. At the time of writing for `Microsoft.AspNetCore.*` packages this is `Version="6.0.4"`.
 
 ## 2. Create an account with Auth0
 Go to [Auth0](https://auth0.com/) and create a free account.
