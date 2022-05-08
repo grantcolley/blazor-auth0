@@ -280,11 +280,24 @@ Replace the contents of [Authentication.razor](https://github.com/grantcolley/bl
 }
 ```
 
-Add the following code to [MainLayout.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Shared/MainLayout.razor):
+Replace the contents of [MainLayout.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Shared/MainLayout.razor) with:
 
 ```C#
+@inherits LayoutComponentBase
+
+<CascadingValue Value="@AppTitle">
+    <MainLayoutBase>
+        <LoginDisplayFragment>
+            <LoginDisplay/>
+        </LoginDisplayFragment>
+        <BodyFragment>
+            @Body
+        </BodyFragment>
+    </MainLayoutBase>
+</CascadingValue>
+
 @code {
-    private string AppTitle = "BlazorWebAssemblyApp";
+    private string AppTitle = "Blazor.WebAssembly.App";
 }
 ```
 
@@ -358,42 +371,205 @@ await builder.Build().RunAsync();
 
 ## 6. Securing the Blazor Server Client
 
-#### Register the Blazor Server Client with Auth0
-Login to [Auth0](https://auth0.com/) and go to **Applications** and click **Create Application**. Give the application a name and for **Application Type** select `Regular Web Application` and click **Save Changes**.
+Delete the `Areas` folder and its contents.
 
+Delete the file `Shared\RedirectToLogin.razor`.
 
-#### Secure the Blazor Server Client
+Add the package package `Auth0.AspNetCore.Authentication` to the project. More information about the package can be found at [ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/**).
 
-In [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/appsettings.json) add a section for `Auth0` and entries for `Domain` and `ClientId`.
+Add the following section to [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/appsettings.json):
 
 ```C#
   "Auth0": {
-    "Domain": "AUTH0_DOMAIN",
-    "ClientId": "AUTH0_CLIENTID"
+    "Authority": "https://[The Domain For Auth0 Application blazor-auth0-Server]",
+    "ClientId": "[The Client ID For Auth0 Application blazor-auth0-Server]",
+    "ClientSecret": "[The Client Secret For Auth0 Application blazor-auth0-Server]",
+    "Audience": "[The Identifier For Auth0 Api blazor-auth0-WebApi]"
   }
-
 ```
 
-Add the nuget package package `Auth0.AspNetCore.Authentication` to the project. More information about the package can be found at [ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/**).
+In the `Pages` folder create empty razor component [Login.cshtml](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/Pages/Login.cshtml) and replace the `OnGet` method of [Login.cshtml.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/Pages/Login.cshtml.cs) as follows:
 
-In [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/Program.cs) call `AddAuth0WebAppAuthentication` to configure authentication and **after ** call `UseAuthentication` and `UseAuthorization` to enable middleware for authentication and authorisation.
 ```C#
+using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
-// existing code omitted for brevity
-
-builder.Services.AddAuth0WebAppAuthentication(options =>
+namespace BlazorServerApp.Pages
 {
-    options.Domain = builder.Configuration["Auth0:Domain"];
-    options.ClientId = builder.Configuration["Auth0:ClientId"];
+    public class LoginModel : PageModel
+    {
+        public async Task OnGet(string redirectUri)
+        {
+            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
+                .WithRedirectUri(redirectUri)
+                .Build();
+
+            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+        }
+    }
+}
+```
+
+In the `Pages` folder create empty razor component [Logout.cshtml](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/Pages/Logout.cshtml) and replace the `OnGet` method of [Logout.cshtml.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/Pages/Logout.cshtml.cs) as follows:
+
+```C#
+using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Blazor.Server.App.Pages
+{
+    [Authorize]
+    public class LogoutModel : PageModel
+    {        
+        public async Task OnGet()
+        {
+            var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
+                 .WithRedirectUri("/")
+                 .Build();
+
+            await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+    }
+}
+```
+
+Replace the contents of [LoginDisplay.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/Shared/LoginDisplay.razor) with the following:
+
+```C#
+@using Microsoft.AspNetCore.Components.Authorization
+
+<AuthorizeView>
+    <Authorized>
+        @context.User.Identity.Name!
+        <a href="logout">Log out</a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="login?redirectUri=/">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+```
+
+Replace the contents of [MainLayout.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/Shared/MainLayout.razor) with:
+
+```C#
+@inherits LayoutComponentBase
+
+<CascadingValue Value="@AppTitle">
+    <MainLayoutBase>
+        <LoginDisplayFragment>
+            <LoginDisplay />
+        </LoginDisplayFragment>
+        <BodyFragment>
+            @Body
+        </BodyFragment>
+    </MainLayoutBase>
+</CascadingValue>
+
+@code {
+    private string AppTitle = "Blazor.Server.App";
+}
+```
+
+Replace the contents of [App.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/App.razor) with:
+
+```C#
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly"
+            AdditionalAssemblies="new[] { typeof(NavMenu).Assembly}" PreferExactMatches="@true">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <p><i>Authorizing...</i></p>
+                </Authorizing>
+                <NotAuthorized>
+                    <p>Access denied.</p>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+```
+
+Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/Program.cs) with the following:
+
+```C#
+using Auth0.AspNetCore.Authentication;
+using Core.Authentication;
+using Core.Interfaces;
+using Service.Services;
+using System.IdentityModel.Tokens.Jwt;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+builder.Services
+    .AddAuth0WebAppAuthentication(Auth0Constants.AuthenticationScheme, options =>
+    {
+        options.Domain = builder.Configuration["Auth0:Domain"];
+        options.ClientId = builder.Configuration["Auth0:ClientId"];
+        options.ClientSecret = builder.Configuration["Auth0:ClientSecret"];
+        options.ResponseType = "code";
+    }).WithAccessToken(options =>
+    {
+        options.Audience = builder.Configuration["Auth0:Audience"];
+    });
+
+builder.Services.AddScoped<TokenProvider>();
+
+builder.Services.AddHttpClient("webapi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:[WebApi PORT]");
 });
 
-// existing code omitted for brevity
+builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>(sp =>
+{
+    var tokenProvider = sp.GetRequiredService<TokenProvider>();
+    var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
+    var httpClient = httpClientFactory.CreateClient("webapi");
+    return new WeatherForecastService(httpClient, tokenProvider);
+});
 
-// after UseRouting
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
-// existing code omitted for brevity
+app.MapBlazorHub();
 
+app.MapFallbackToPage("/_Host");
+
+app.Run();
 ```
-
+> Note when adding the HttpClient the port to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
