@@ -241,7 +241,7 @@ Add `[CascadingParameter] protected string AppTitle { get; set; }` to [NavMenu.r
 
 ## 5. Securing the Blazor WASM Client
 
-Delete `Account\UserAccountFactory.cs`.
+Delete files `Account\UserAccountFactory.cs` and `Shared\RedirectToLogin.razor`.
 
 Add `@using Microsoft.AspNetCore.Authorization` to [_Imports.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/_Imports.razor).
 
@@ -286,6 +286,33 @@ Add the following code to [MainLayout.razor](https://github.com/grantcolley/blaz
 @code {
     private string AppTitle = "BlazorWebAssemblyApp";
 }
+```
+
+Replace the contents of [App.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/App.razor) with:
+
+```C#
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly"
+            AdditionalAssemblies="new[] { typeof(NavMenu).Assembly}" PreferExactMatches="@true">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <p><i>Authorizing...</i></p>
+                </Authorizing>
+                <NotAuthorized>
+                    <p>Access denied.</p>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
 ```
 
 Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Program.cs) with:
