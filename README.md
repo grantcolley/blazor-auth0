@@ -64,7 +64,9 @@ Go to [Auth0](https://auth0.com/) and create a free account.
 In the dashboard go to `Applications >> APIs` and register the WebApi with the **Name** `blazor-auth0-WebApi` and **Identifier** as `https://WebApi.com`. Note the identifier is not a valid web address and is used as the `audience` parameter for authorization calls.
 
 #### Register the Blazor WASM Client
-In the dashboard go to `Applications >> Applications` and register the Blazor WASM client with the **Name** `blazor-auth0-WASM` and **Application Type** `Single Page Application`. Set **Allowed Callback URLs** to `https://localhost:[PORT]/authentication/login-callback`, and **Allowed Logout URLs to** `https://localhost:[PORT]`. Note the port to use is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **BlazorWebAssemblyApp** project.
+In the dashboard go to `Applications >> Applications` and register the Blazor WASM client with the **Name** `blazor-auth0-WASM` and **Application Type** `Single Page Application`. Set **Allowed Callback URLs** to `https://localhost:[PORT]/authentication/login-callback`, and **Allowed Logout URLs to** `https://localhost:[PORT]`.
+
+> Note the port to use is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **BlazorWebAssemblyApp** project.
 
 #### Register the Blazor Server Client
 In the dashboard go to `Applications >> Applications` and register the Blazor Server client with the **Name** `blazor-auth0-Server` and **Application Type** `Regular Web Application`. Set **Allowed Callback URLs** to `https://localhost:[PORT]/callback`, and **Allowed Logout URLs to** `https://localhost:[PORT]`. Note the port to use is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **BlazorServerApp** project.
@@ -149,7 +151,7 @@ app.MapControllers();
 app.Run();
 ```
 
-Note when adding the CORS policy, the ports to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **BlazorWebAssemblyApp** and **BlazorServerApp** projects.
+> Note when adding the CORS policy, the ports to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **BlazorWebAssemblyApp** and **BlazorServerApp** projects.
 
 ## 4. Securing Shared Razor Components
 
@@ -239,7 +241,11 @@ Add `[CascadingParameter] protected string AppTitle { get; set; }` to [NavMenu.r
 
 ## 5. Securing the Blazor WASM Client
 
-Replace the contents of [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/wwwroot/appsettings.json) with the following:
+Delete `Account\UserAccountFactory.cs`.
+
+Add `@using Microsoft.AspNetCore.Authorization` to [_Imports.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/_Imports.razor).
+
+Replace the contents of [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/wwwroot/appsettings.json) with:
 
 ```C#
 {
@@ -250,8 +256,6 @@ Replace the contents of [appsettings.json](https://github.com/grantcolley/blazor
   }
 }
 ```
-
-Delete `Account\UserAccountFactory.cs`.
 
 Replace the contents of [Authentication.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Pages/Authentication.razor) with:
 
@@ -275,6 +279,55 @@ Replace the contents of [Authentication.razor](https://github.com/grantcolley/bl
     [Parameter] public string Action { get; set; }
 }
 ```
+
+Add the following code to [MainLayout.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Shared/MainLayout.razor):
+
+```C#
+@code {
+    private string AppTitle = "BlazorWebAssemblyApp";
+}
+```
+
+Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Program.cs) with:
+
+```C#
+using BlazorWebAssemblyApp;
+using Core.Interface;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Services;
+
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddOidcAuthentication(options =>
+{
+    builder.Configuration.Bind("Auth0", options.ProviderOptions);
+    options.ProviderOptions.ResponseType = "code";
+    options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]);
+});
+
+builder.Services.AddHttpClient("WebApi",
+      client => client.BaseAddress = new Uri("https://localhost:[WebApi PORT]"))
+    .AddHttpMessageHandler(sp =>
+    {
+        var httpMessageHandler = sp.GetService<AuthorizationMessageHandler>()?
+        .ConfigureHandler(authorizedUrls: new[] { "https://localhost:[WebApi PORT]" });
+        return httpMessageHandler ?? throw new NullReferenceException(nameof(AuthorizationMessageHandler));
+    });
+
+builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>(sp =>
+{
+    var httpClient = sp.GetRequiredService<IHttpClientFactory>();
+    var weatherForecastServiceHttpClient = httpClient.CreateClient("WebApi");
+    return new WeatherForecastService(weatherForecastServiceHttpClient);
+});
+
+await builder.Build().RunAsync();
+```
+> Note when adding the HttpClient the ports to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
 
 ## 6. Securing the Blazor Server Client
 
