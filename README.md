@@ -30,7 +30,7 @@ Remove the **IdentityProvider** project from the solution and delete the folder 
 Upgrade all projects to *net6.0*. In each *\*.proj* file:
 
 Replace
-```
+```C#
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -39,7 +39,7 @@ Replace
 ```
 
 with
-```
+```C#
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -48,7 +48,7 @@ with
 ```
 
 In the **BlazorServerApp.csproj** project remove the following package references:
-```
+```C#
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.4" />
@@ -70,6 +70,86 @@ In the dashboard go to `Applications >> Applications` and register the Blazor WA
 In the dashboard go to `Applications >> Applications` and register the Blazor Server client with the **Name** `blazor-auth0-Server` and **Application Type** `Regular Web Application`. Set **Allowed Callback URLs** to `https://localhost:[PORT]/callback`, and **Allowed Logout URLs to** `https://localhost:[PORT]`. Note the port to use is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **BlazorServerApp** project.
 
 ## 3. Securing the WebApi
+
+In [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/appsettings.json) add the following section:
+
+```C#
+  "Auth0": {
+    "Domain": "[The Domain For Auth0 Application blazor-auth0-Server]",
+    "Audience": "[The Identifier For Auth0 Api blazor-auth0-WebApi]"
+  }
+```
+
+In [WeatherForecastController](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/Controllers/WeatherForecastController.cs) replace `[Authorize(Roles = "weatheruser")]` with `[Authorize]`.
+
+Delete the file `Startup.cs`.
+
+Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/Program.cs) with:
+
+```C#
+using Core.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Repository.Repositories;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.Authority = $"https://{builder.Configuration["Auth0:Domain"]}";
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Auth0:Domain"],
+        ValidAudience = builder.Configuration["Auth0:Audience"]
+    };
+});
+
+builder.Services.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("local",
+        builder =>
+            builder.WithOrigins("https://localhost:[BlazorWebAssemblyApp PORT]", "https://localhost:[BlazorServerApp PORT]")
+                   .AllowAnyHeader());
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseCors("local");
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+```
+
+Note when adding the CORS policy, the ports to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **BlazorWebAssemblyApp** and **BlazorServerApp** projects.
 
 ## 4. Securing Shared Razor Components
 
