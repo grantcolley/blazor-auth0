@@ -209,6 +209,34 @@ else
     }
 }
 ```
+
+Add `[CascadingParameter] protected string AppTitle { get; set; }` to [NavMenu.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Shared/NavMenu.razor) as follows:
+
+```C#
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">@AppTitle</a>
+    
+    // existing code not shown for brevity...
+
+</div>
+
+// existing code not shown for brevity...
+
+@code {
+    [CascadingParameter]
+    protected string AppTitle { get; set; }
+
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+```
+
 ## 5. Securing the Blazor WASM Client
 
 ## 6. Securing the Blazor Server Client
