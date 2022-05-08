@@ -10,34 +10,32 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
 
 #### Table of Contents
 1. [Preparing the Solution](#1-preparing-the-solution)
-    * [Create the Solution Projects](#create-the-solution-projects)
-    * [Create an account with Auth0](#create-an-account-with-auth0)
-2. [Securing the WebApi](#2-securing-the-webapi)
+2. [Create an account with Auth0](#2-create-an-account-with-auth0)
+3. [Securing the WebApi](#3-securing-the-webapi)
     * [Register the WebApi with Auth0](#register-the-webapi-with-auth0)
     * [Secure the WebApi](#secure-the-webapi)
-3. [Securing Shared Razor Components](#3-securing-shared-razor-components)
-4. [Securing the Blazor WASM Client](#4-securing-the-blazor-wasm-client)
+4. [Securing Shared Razor Components](#4-securing-shared-razor-components)
+5. [Securing the Blazor WASM Client](#5-securing-the-blazor-wasm-client)
     * [Register the Blazor WASM Client with Auth0](#register-the-blazor-wasm-client-with-auth0)
     * [Secure the Blazor WASM Client](#secure-the-blazor-wasm-client)
-5. [Securing the Blazor Server Client](#5-securing-the-blazor-server-client)
+6. [Securing the Blazor Server Client](#6-securing-the-blazor-server-client)
     * [Register the Blazor Server Client with Auth0](#register-the-blazor-server-client-with-auth0)
     * [Secure the Blazor Server Client](#secure-the-blazor-server-client)
 
 ## 1. Preparing the Solution
 
-#### Create the Solution Projects
 **blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) project with the identity provider project and all references and code relating to authentication stripped out.
 
-#### Create an account with Auth0
+## 2. Create an account with Auth0
 Go to [Auth0](https://auth0.com/) and create a free account.
 
-## 2. Securing the WebApi
+## 3. Securing the WebApi
 
 #### Register the WebApi with Auth0
 
 #### Secure the WebApi
 
-## 3. Securing Shared Razor Components
+## 4. Securing Shared Razor Components
 
 In the shared **Razor** project add the `Authorize` attribute to [FetchData.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Pages/FetchData.razor)
 ```C#
@@ -50,13 +48,13 @@ In the shared **Razor** project add the `Authorize` attribute to [FetchData.razo
 // existing code omitted for brevity
 
 ```
-## 4. Securing the Blazor WASM Client
+## 5. Securing the Blazor WASM Client
 
 #### Register the Blazor WASM Client with Auth0
 
 #### Secure the Blazor WASM Client
 
-## 5. Securing the Blazor Server Client
+## 6. Securing the Blazor Server Client
 
 #### Register the Blazor Server Client with Auth0
 Login to [Auth0](https://auth0.com/) and go to **Applications** and click **Create Application**. Give the application a name and for **Application Type** select `Regular Web Application` and click **Save Changes**.
