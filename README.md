@@ -153,7 +153,10 @@ Note when adding the CORS policy, the ports to specify is set in `profiles:appli
 
 ## 4. Securing Shared Razor Components
 
-In the shared **Razor** project add the `Authorize` attribute to [FetchData.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Pages/FetchData.razor)
+In [_Imports.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/RazorComponents/_Imports.razor) replace `@using Microsoft.AspNetCore.Components.Authorization` with `@using Microsoft.AspNetCore.Authorization`.
+
+Replace the contents of [FetchData.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Pages/FetchData.razor) with:
+
 ```C#
 @page "/fetchdata"
 
@@ -161,8 +164,50 @@ In the shared **Razor** project add the `Authorize` attribute to [FetchData.razo
 
 <PageTitle>Weather forecast</PageTitle>
 
-// existing code omitted for brevity
+<h1>Weather forecast</h1>
 
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    protected IEnumerable<WeatherForecast>? forecasts;
+
+    [Inject]
+    public IWeatherForecastService? WeatherForecastService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await WeatherForecastService.GetWeatherForecasts();
+    }
+}
 ```
 ## 5. Securing the Blazor WASM Client
 
