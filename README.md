@@ -213,17 +213,44 @@ else
 }
 ```
 
-Add `[CascadingParameter] protected string AppTitle { get; set; }` to [NavMenu.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Shared/NavMenu.razor) as follows:
+Replace the contents of [NavMenu.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Shared/NavMenu.razor) with the following:
 
 ```C#
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">@AppTitle</a>
-    
-    // existing code not shown for brevity...
-
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </div>
 
-// existing code not shown for brevity...
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </li>
+        <AuthorizeView>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="fetchdata">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+                </NavLink>
+            </li>
+        </AuthorizeView>
+        <AuthorizeView>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="user">
+                    <span class="oi oi-person" aria-hidden="true"></span> User
+                </NavLink>
+            </li>
+        </AuthorizeView>
+    </ul>
+</div>
 
 @code {
     [CascadingParameter]
