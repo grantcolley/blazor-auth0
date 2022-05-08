@@ -11,16 +11,13 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
 #### Table of Contents
 1. [Preparing the Solution](#1-preparing-the-solution)
 2. [Create an account with Auth0](#2-create-an-account-with-auth0)
+    * [Register the WebApi](#register-the-webapi)
+    * [Register the Blazor WASM Client](#register-the-blazor-wasm-client)
+    * [Register the Blazor Server Client](#register-the-blazor-server-client)
 3. [Securing the WebApi](#3-securing-the-webapi)
-    * [Register the WebApi with Auth0](#register-the-webapi-with-auth0)
-    * [Secure the WebApi](#secure-the-webapi)
 4. [Securing Shared Razor Components](#4-securing-shared-razor-components)
 5. [Securing the Blazor WASM Client](#5-securing-the-blazor-wasm-client)
-    * [Register the Blazor WASM Client with Auth0](#register-the-blazor-wasm-client-with-auth0)
-    * [Secure the Blazor WASM Client](#secure-the-blazor-wasm-client)
 6. [Securing the Blazor Server Client](#6-securing-the-blazor-server-client)
-    * [Register the Blazor Server Client with Auth0](#register-the-blazor-server-client-with-auth0)
-    * [Secure the Blazor Server Client](#secure-the-blazor-server-client)
 
 ## 1. Preparing the Solution
 
@@ -63,11 +60,13 @@ For all projects upgrade the package references to the latest stable version. At
 ## 2. Create an account with Auth0
 Go to [Auth0](https://auth0.com/) and create a free account.
 
+#### Register the WebApi
+
+#### Register the Blazor WASM Client
+
+#### Register the Blazor Server Client
+
 ## 3. Securing the WebApi
-
-#### Register the WebApi with Auth0
-
-#### Secure the WebApi
 
 ## 4. Securing Shared Razor Components
 
@@ -83,10 +82,6 @@ In the shared **Razor** project add the `Authorize` attribute to [FetchData.razo
 
 ```
 ## 5. Securing the Blazor WASM Client
-
-#### Register the Blazor WASM Client with Auth0
-
-#### Secure the Blazor WASM Client
 
 ## 6. Securing the Blazor Server Client
 
