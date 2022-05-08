@@ -239,6 +239,43 @@ Add `[CascadingParameter] protected string AppTitle { get; set; }` to [NavMenu.r
 
 ## 5. Securing the Blazor WASM Client
 
+Replace the contents of [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/wwwroot/appsettings.json) with the following:
+
+```C#
+{
+  "Auth0": {
+    "Authority": "https://[The Domain For Auth0 Application blazor-auth0-WASM]",
+    "ClientId": "[The Client ID For Auth0 Application blazor-auth0-WASM]",
+    "Audience": "[The Identifier For Auth0 Api blazor-auth0-WebApi]"
+  }
+}
+```
+
+Delete `Account\UserAccountFactory.cs`.
+
+Replace the contents of [Authentication.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Pages/Authentication.razor) with:
+
+```C#
+@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Extensions.Configuration
+
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+
+<RemoteAuthenticatorView Action="@Action">
+    <LogOut>
+        @{
+            Navigation.NavigateTo($"{Configuration["Auth0:Authority"]}/v2/logout?client_id={Configuration["Auth0:ClientId"]}");
+        }
+    </LogOut>
+</RemoteAuthenticatorView>
+
+@code{
+    [Parameter] public string Action { get; set; }
+}
+```
+
 ## 6. Securing the Blazor Server Client
 
 #### Register the Blazor Server Client with Auth0
