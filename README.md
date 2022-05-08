@@ -18,6 +18,7 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
 4. [Securing Shared Razor Components](#4-securing-shared-razor-components)
 5. [Securing the Blazor WASM Client](#5-securing-the-blazor-wasm-client)
 6. [Securing the Blazor Server Client](#6-securing-the-blazor-server-client)
+7. [Running the Solution](#7-running-the-solution)
 
 ## 1. Preparing the Solution
 
@@ -471,7 +472,7 @@ Replace the contents of [MainLayout.razor](https://github.com/grantcolley/blazor
 </CascadingValue>
 
 @code {
-    private string AppTitle = "Blazor.Server.App";
+    private string AppTitle = "BlazorServerApp";
 }
 ```
 
@@ -573,3 +574,8 @@ app.MapFallbackToPage("/_Host");
 app.Run();
 ```
 > Note when adding the HttpClient the port to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
+
+## 7. Running the Solution
+In the solution's properties window select Multiple startup projects and set the Action of the **WebApi**, **BlazorWebAssemblyApp**, and **BlazorServerApp** to Startup.
+
+Compile and run the solution...
