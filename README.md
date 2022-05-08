@@ -74,6 +74,8 @@ In the dashboard go to `Applications >> Applications` and register the Blazor Se
 
 ## 3. Securing the WebApi
 
+Delete the file `Startup.cs`.
+
 In [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/appsettings.json) add the following section:
 
 ```C#
@@ -84,8 +86,6 @@ In [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/
 ```
 
 In [WeatherForecastController](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/Controllers/WeatherForecastController.cs) replace `[Authorize(Roles = "weatheruser")]` with `[Authorize]`.
-
-Delete the file `Startup.cs`.
 
 Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/Program.cs) with:
 
@@ -398,6 +398,8 @@ await builder.Build().RunAsync();
 > Note when adding the HttpClient the port to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
 
 ## 6. Securing the Blazor Server Client
+
+Delete the file `Startup.cs`.
 
 Delete the `Areas` folder and its contents.
 
