@@ -24,7 +24,12 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
 
 ## 1. Preparing the Solution
 
-**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) project with the identity provider project and all references and code relating to authentication stripped out.
+**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) project with the identity provider project using **IdentityServer4**, and all references and code relating to it, stripped out.
+
+Rename the solution file **BlazorSolutionSetup.sln** to **Blazor-Auth0.sln**.
+
+Remove the **IdentityProvider** project from the solution and delete the folder from the directory.
+
 
 ## 2. Create an account with Auth0
 Go to [Auth0](https://auth0.com/) and create a free account.
