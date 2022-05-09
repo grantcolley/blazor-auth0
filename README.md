@@ -507,6 +507,11 @@ Replace the contents of [MainLayout.razor](https://github.com/grantcolley/blazor
 Replace the contents of [App.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/App.razor) with:
 
 ```C#
+@using Core.Model
+@using BlazorServerApp.Model
+
+@inject TokenProvider TokenProvider
+
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly"
             AdditionalAssemblies="new[] { typeof(NavMenu).Assembly}" PreferExactMatches="@true">
@@ -529,6 +534,20 @@ Replace the contents of [App.razor](https://github.com/grantcolley/blazor-auth0/
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    [Parameter]
+    public InitialApplicationState InitialState { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        TokenProvider.AccessToken = InitialState.AccessToken;
+        TokenProvider.RefreshToken = InitialState.RefreshToken;
+        TokenProvider.IdToken = InitialState.IdToken;
+
+        return base.OnInitializedAsync();
+    }
+}
 ```
 
 Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/Program.cs) with the following:
