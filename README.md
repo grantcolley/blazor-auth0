@@ -324,7 +324,7 @@ Replace the contents of [MainLayout.razor](https://github.com/grantcolley/blazor
 </CascadingValue>
 
 @code {
-    private string AppTitle = "Blazor.WebAssembly.App";
+    private string AppTitle = "BlazorWebAssemblyApp";
 }
 ```
 
