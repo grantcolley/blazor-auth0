@@ -34,9 +34,7 @@ Upgrade all projects to *net6.0*. In each *\*.proj* file:
 Replace
 ```C#
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 ```
 
