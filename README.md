@@ -1,5 +1,8 @@
 # blazor-auth0
-A solution for a Blazor WebAssembly App and a Blazor Server App and securing them with Auth0 as the Identity Provider.
+A solution for a Blazor WebAssembly App and a Blazor Server App and securing them with [Auth0](https://auth0.com/) as the Identity Provider.
+
+
+**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) solution that uses [IdentityServer4](https://identityserver4.readthedocs.io/en/latest/) as its identity provider. This project will take a copy of [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) and strip out all references and code relating to [IdentityServer4](https://identityserver4.readthedocs.io/en/latest/) and replace it with [Auth0](https://auth0.com/).
 
 ###### .NET 6.0, Blazor WebAssembly, Blazor Server, Auth0, ASP.NET Core Web API
 ###### 
@@ -21,8 +24,6 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
 7. [Running the Solution](#7-running-the-solution)
 
 ## 1. Preparing the Solution
-
-**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) project with the identity provider project using **IdentityServer4**, and all references and code relating to it, stripped out.
 
 Rename the solution file **BlazorSolutionSetup.sln** to **Blazor-Auth0.sln**.
 
