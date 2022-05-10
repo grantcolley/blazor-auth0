@@ -1,5 +1,8 @@
 # blazor-auth0
-A solution for a Blazor WebAssembly App and a Blazor Server App and securing them with Auth0 as the Identity Provider.
+A solution for a Blazor WebAssembly App and a Blazor Server App and securing them with [Auth0](https://auth0.com/) as the Identity Provider.
+
+
+**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) solution that uses [IdentityServer4](https://identityserver4.readthedocs.io/en/latest/) as its identity provider. This project will take a copy of [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) and strip out all references and code relating to [IdentityServer4](https://identityserver4.readthedocs.io/en/latest/) and replace it with [Auth0](https://auth0.com/).
 
 ###### .NET 6.0, Blazor WebAssembly, Blazor Server, Auth0, ASP.NET Core Web API
 ###### 
@@ -22,8 +25,6 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
 
 ## 1. Preparing the Solution
 
-**blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) project with the identity provider project using **IdentityServer4**, and all references and code relating to it, stripped out.
-
 Rename the solution file **BlazorSolutionSetup.sln** to **Blazor-Auth0.sln**.
 
 Remove the **IdentityProvider** project from the solution and delete the folder from the directory.
@@ -33,9 +34,7 @@ Upgrade all projects to *net6.0*. In each *\*.proj* file:
 Replace
 ```C#
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 ```
 
@@ -325,7 +324,7 @@ Replace the contents of [MainLayout.razor](https://github.com/grantcolley/blazor
 </CascadingValue>
 
 @code {
-    private string AppTitle = "Blazor.WebAssembly.App";
+    private string AppTitle = "BlazorWebAssemblyApp";
 }
 ```
 
@@ -405,7 +404,7 @@ Delete the `Areas` folder and its contents.
 
 Delete the file `Shared\RedirectToLogin.razor`.
 
-Add the package package `Auth0.AspNetCore.Authentication` to the project. More information about the package can be found at [ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/**).
+Add the package package `Auth0.AspNetCore.Authentication` to the project. More information about the package can be found at [Auth0 - ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/).
 
 Add the following section to [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/appsettings.json):
 
@@ -508,6 +507,11 @@ Replace the contents of [MainLayout.razor](https://github.com/grantcolley/blazor
 Replace the contents of [App.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/App.razor) with:
 
 ```C#
+@using Core.Model
+@using BlazorServerApp.Model
+
+@inject TokenProvider TokenProvider
+
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly"
             AdditionalAssemblies="new[] { typeof(NavMenu).Assembly}" PreferExactMatches="@true">
@@ -530,6 +534,20 @@ Replace the contents of [App.razor](https://github.com/grantcolley/blazor-auth0/
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    [Parameter]
+    public InitialApplicationState InitialState { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        TokenProvider.AccessToken = InitialState.AccessToken;
+        TokenProvider.RefreshToken = InitialState.RefreshToken;
+        TokenProvider.IdToken = InitialState.IdToken;
+
+        return base.OnInitializedAsync();
+    }
+}
 ```
 
 Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/Program.cs) with the following:
