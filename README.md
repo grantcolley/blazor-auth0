@@ -628,6 +628,23 @@ app.Run();
 
 ## 7. Authorising Users by Role
 #### Create the Auth0 Role
+Create a role and add it to the Access and ID Token.
+
+In the [Auth0](https://auth0.com/) dashboard go to `User Management >> Roles` and create a role called `blazor-auth0`. Add your user to the role.
+
+Go to `Auth Pipeline >> Rules` and create a rule called `blazor-auth0-token`. Add the following to the Script:
+
+```javascript
+function (user, context, callback) {
+   const accessTokenClaims = context.accessToken || {};
+   const idTokenClaims = context.idToken || {};
+   const assignedRoles = (context.authorization || {}).roles;
+   accessTokenClaims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] = assignedRoles;
+   idTokenClaims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] = assignedRoles;
+   return callback(null, user, context);
+}
+```
+
 #### Restrict the Client and WebApi
 #### Consume roles in the Blazor WASM Client
 
