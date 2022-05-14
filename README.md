@@ -22,7 +22,10 @@ A solution for a Blazor WebAssembly App and a Blazor Server App and securing the
 5. [Securing the Blazor WASM Client](#5-securing-the-blazor-wasm-client)
 6. [Securing the Blazor Server Client](#6-securing-the-blazor-server-client)
 7. [Authorising Users by Role](#7-authorising-users-by-role)
-8. [Running the Solution](#8-running-the-solution)
+    * [Create the Auth0 Role](#create-the-auth0-role)
+    * [Restrict the Client and WebApi](#restrict-the-client-and-webapi)
+    * [Consume roles in the Blazor WASM Client](#consume-roles-in-the-blazor-wasm-client)
+9. [Running the Solution](#8-running-the-solution)
 
 ## 1. Preparing the Solution
 
@@ -624,6 +627,9 @@ app.Run();
 > Note when adding the HttpClient the port to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
 
 ## 7. Authorising Users by Role
+#### Create the Auth0 Role
+#### Restrict the Client and WebApi
+#### Consume roles in the Blazor WASM Client
 
 ## 8. Running the Solution
 In the solution's properties window select Multiple startup projects and set the Action of the **WebApi**, **BlazorWebAssemblyApp**, and **BlazorServerApp** to Startup.
