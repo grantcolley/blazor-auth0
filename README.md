@@ -623,7 +623,7 @@ app.Run();
 ```
 > Note when adding the HttpClient the port to specify is set in `profiles:applicationUrl` of the `launchSettings.json` file for the **WebApi** project.
 
-## 7. 8. Authorising Users by Role
+## 7. Authorising Users by Role
 
 ## 8. Running the Solution
 In the solution's properties window select Multiple startup projects and set the Action of the **WebApi**, **BlazorWebAssemblyApp**, and **BlazorServerApp** to Startup.
