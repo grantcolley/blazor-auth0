@@ -303,7 +303,8 @@ Replace the contents of [Authentication.razor](https://github.com/grantcolley/bl
 <RemoteAuthenticatorView Action="@Action">
     <LogOut>
         @{
-            Navigation.NavigateTo($"{Configuration["Auth0:Authority"]}/v2/logout?client_id={Configuration["Auth0:ClientId"]}");
+            Navigation.NavigateTo(
+               $"{Configuration["Auth0:Authority"]}/v2/logout?client_id={Configuration["Auth0:ClientId"]}");
         }
     </LogOut>
 </RemoteAuthenticatorView>
