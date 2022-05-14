@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "blazor-auth0")]
     [ApiController]
     [EnableCors("local")]
     [Route("[controller]")]

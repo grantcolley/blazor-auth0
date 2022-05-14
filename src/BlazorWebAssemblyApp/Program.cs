@@ -1,4 +1,5 @@
 using BlazorWebAssemblyApp;
+using BlazorWebAssemblyApp.Account;
 using Core.Interface;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -14,7 +15,7 @@ builder.Services.AddOidcAuthentication(options =>
     builder.Configuration.Bind("Auth0", options.ProviderOptions);
     options.ProviderOptions.ResponseType = "code";
     options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]);
-});
+}).AddAccountClaimsPrincipalFactory<UserAccountFactory>();
 
 builder.Services.AddHttpClient("WebApi",
       client => client.BaseAddress = new Uri("https://localhost:7225"))
