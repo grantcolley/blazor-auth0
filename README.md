@@ -161,7 +161,7 @@ app.Run();
 
 In [_Imports.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/RazorComponents/_Imports.razor) add `@using Microsoft.AspNetCore.Authorization`.
 
-Replace the contents of [FetchData.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Pages/FetchData.razor) with:
+Replace the contents of [FetchData.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/RazorComponents/Pages/FetchData.razor) with:
 
 ```C#
 @page "/fetchdata"
