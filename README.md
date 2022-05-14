@@ -410,7 +410,7 @@ Delete the file `Shared\RedirectToLogin.razor`.
 
 Add the package package `Auth0.AspNetCore.Authentication` to the project. More information about the package can be found at [Auth0 - ASP.NET Core Authentication SDK](https://auth0.com/blog/exploring-auth0-aspnet-core-authentication-sdk/).
 
-Add the following section to [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/appsettings.json):
+Add the following section to [appsettings.json](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/appsettings.json):
 
 ```C#
   "Auth0": {
