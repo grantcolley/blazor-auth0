@@ -390,7 +390,8 @@ builder.Services.AddHttpClient("WebApi",
     {
         var httpMessageHandler = sp.GetService<AuthorizationMessageHandler>()?
         .ConfigureHandler(authorizedUrls: new[] { "https://localhost:[WebApi PORT]" });
-        return httpMessageHandler ?? throw new NullReferenceException(nameof(AuthorizationMessageHandler));
+        return httpMessageHandler 
+               ?? throw new NullReferenceException(nameof(AuthorizationMessageHandler));
     });
 
 builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>(sp =>
