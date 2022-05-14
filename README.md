@@ -646,6 +646,10 @@ function (user, context, callback) {
 ```
 
 #### Restrict the Client and WebApi
+In the **RazorComponents** project update the `@attribute [Authorize]` inside [FetchData.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Pages/FetchData.razor) to `@attribute [Authorize(Roles = "blazor-auth0")]`.
+
+In the **WebApi** project update the `[Authorize]` inside [WeatherForecastController](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/Controllers/WeatherForecastController.cs) to `[Authorize(Roles = "blazor-auth0")]`.
+
 #### Consume roles in the Blazor WASM Client
 
 ## 8. Running the Solution
