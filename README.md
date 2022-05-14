@@ -651,6 +651,54 @@ In the **RazorComponents** project update the `@attribute [Authorize]` inside [F
 In the **WebApi** project update the `[Authorize]` inside [WeatherForecastController](https://github.com/grantcolley/blazor-auth0/blob/main/src/WebApi/Controllers/WeatherForecastController.cs) to `[Authorize(Roles = "blazor-auth0")]`.
 
 #### Consume roles in the Blazor WASM Client
+The identity provider sends the roles as an array stored in a single claim in the access and ID tokens. The array of roles must be separated by the token consumer.
+
+To do this create a [UserAccountFactory](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Account/UserAccountFactory.cs) class that inherits from [AccountClaimsPrincipalFactory<TAccount>](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.webassembly.authentication.accountclaimsprincipalfactory-1?view=aspnetcore-6.0) as follows:
+   
+```C#
+    public class UserAccountFactory : AccountClaimsPrincipalFactory<RemoteUserAccount>
+    {
+        public UserAccountFactory(IAccessTokenProviderAccessor accessor) : base(accessor)
+        {
+        }
+
+        public async override ValueTask<ClaimsPrincipal> CreateUserAsync(RemoteUserAccount account, RemoteAuthenticationUserOptions options)
+        {
+            var user = await base.CreateUserAsync(account, options);
+
+            if (user?.Identity?.IsAuthenticated ?? false)
+            {
+                var identity = (ClaimsIdentity)user.Identity;
+                account.AdditionalProperties.TryGetValue(ClaimTypes.Role, out var roleClaims);
+
+                if (roleClaims != null
+                    && roleClaims is JsonElement element
+                    && element.ValueKind == JsonValueKind.Array)
+                {
+                    identity.RemoveClaim(identity.FindFirst(ClaimTypes.Role));
+
+                    var claims = element.EnumerateArray()
+                        .Select(c => new Claim(ClaimTypes.Role, c.ToString()));
+
+                    identity.AddClaims(claims);
+                }
+            }
+
+            return user ?? new ClaimsPrincipal();
+        }
+    }
+```
+
+In [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Program.cs) register the [UserAccountFactory](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorWebAssemblyApp/Account/UserAccountFactory.cs) so it is called everytime the user logs in, as follows:
+   
+```C#
+builder.Services.AddOidcAuthentication(options =>
+{
+    builder.Configuration.Bind("Auth0", options.ProviderOptions);
+    options.ProviderOptions.ResponseType = "code";
+    options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]);
+}).AddAccountClaimsPrincipalFactory<UserAccountFactory>();
+```
 
 ## 8. Running the Solution
 In the solution's properties window select Multiple startup projects and set the Action of the **WebApi**, **BlazorWebAssemblyApp**, and **BlazorServerApp** to Startup.
