@@ -127,8 +127,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("local",
         builder =>
-            builder.WithOrigins("https://localhost:[BlazorWebAssemblyApp PORT]", "https://localhost:[BlazorServerApp PORT]")
-                   .AllowAnyHeader());
+            builder.WithOrigins(
+                        "https://localhost:[BlazorWebAssemblyApp PORT]", 
+                        "https://localhost:[BlazorServerApp PORT]")
+                        .AllowAnyHeader());
 });
 
 var app = builder.Build();
