@@ -443,7 +443,8 @@ namespace BlazorServerApp.Pages
                 .WithRedirectUri(redirectUri)
                 .Build();
 
-            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+            await HttpContext.ChallengeAsync(
+                     Auth0Constants.AuthenticationScheme, authenticationProperties);
         }
     }
 }
@@ -609,7 +610,8 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // The default HSTS value is 30 days. You may want to change this  
+    // for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -667,7 +669,8 @@ To do this create a [UserAccountFactory](https://github.com/grantcolley/blazor-a
         {
         }
 
-        public async override ValueTask<ClaimsPrincipal> CreateUserAsync(RemoteUserAccount account, RemoteAuthenticationUserOptions options)
+        public async override ValueTask<ClaimsPrincipal> CreateUserAsync(
+                                       RemoteUserAccount account, RemoteAuthenticationUserOptions options)
         {
             var user = await base.CreateUserAsync(account, options);
 
@@ -701,7 +704,8 @@ builder.Services.AddOidcAuthentication(options =>
 {
     builder.Configuration.Bind("Auth0", options.ProviderOptions);
     options.ProviderOptions.ResponseType = "code";
-    options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]);
+    options.ProviderOptions.AdditionalProviderParameters.Add(
+                        "audience", builder.Configuration["Auth0:Audience"]);
 }).AddAccountClaimsPrincipalFactory<UserAccountFactory>();
 ```
 
