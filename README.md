@@ -554,7 +554,7 @@ Replace the contents of [App.razor](https://github.com/grantcolley/blazor-auth0/
 }
 ```
 
-Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/Blazor.Server.App/Program.cs) with the following:
+Replace the contents of [Program.cs](https://github.com/grantcolley/blazor-auth0/blob/main/src/BlazorServerApp/Program.cs) with the following:
 
 ```C#
 using Auth0.AspNetCore.Authentication;
