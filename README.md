@@ -216,7 +216,7 @@ else
 }
 ```
 
-Replace the contents of [NavMenu.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/Razor/Shared/NavMenu.razor) with the following:
+Replace the contents of [NavMenu.razor](https://github.com/grantcolley/blazor-auth0/blob/main/src/RazorComponents/Shared/NavMenu.razor) with the following:
 
 ```C#
 <div class="top-row pl-4 navbar navbar-dark">
