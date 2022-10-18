@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+
+<AuthorizeView>
+    <Authorized>
+        @context.User.Identity.Name!
+        <button class="nav-link btn btn-link" @onclick="LogOut">Log out</button>
+    </Authorized>
+    <NotAuthorized>
+        <button class="nav-link btn btn-link" @onclick="LogIn">Log in</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Inject]
+    public Auth0Client auth0Client { get; set; }
+
+    private async Task LogIn(MouseEventArgs args)
+    {
+        var loginResult = await auth0Client.LoginAsync();
+
+        if (!loginResult.IsError)
+        {
+            // successful
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task LogOut(MouseEventArgs args)
+    {
+        var logoutResult = await auth0Client.LogoutAsync();
+
+        if (!logoutResult.IsError)
+        {
+            // successful
+        }
+
+        StateHasChanged();
+    }
+}
