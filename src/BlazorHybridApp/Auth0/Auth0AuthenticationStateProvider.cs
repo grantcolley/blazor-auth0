@@ -5,15 +5,19 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Core.Model;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 namespace BlazorHybridApp.Auth0
 {
-    public class Auth0Client
+    public class Auth0AuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly OidcClient oidcClient;
         private readonly TokenProvider tokenProvider;
 
-        public Auth0Client(Auth0ClientOptions options, TokenProvider tokenProvider)
+        private ClaimsPrincipal currentUser = new ClaimsPrincipal(new ClaimsIdentity());
+
+        public Auth0AuthenticationStateProvider(Auth0AuthenticationStateProviderOptions options, TokenProvider tokenProvider)
         {
             oidcClient = new OidcClient(new OidcClientOptions
             {
@@ -27,6 +31,9 @@ namespace BlazorHybridApp.Auth0
             this.tokenProvider = tokenProvider;
         }
 
+        public override Task<AuthenticationState> GetAuthenticationStateAsync() =>
+            Task.FromResult(new AuthenticationState(currentUser));
+
         public IdentityModel.OidcClient.Browser.IBrowser Browser
         {
             get
@@ -39,16 +46,19 @@ namespace BlazorHybridApp.Auth0
             }
         }
 
-        public async Task<LoginResult> LoginAsync()
+        public async Task LogInAsync()
         {
             var loginResult = await oidcClient.LoginAsync();
             tokenProvider.RefreshToken = loginResult.RefreshToken;
             tokenProvider.AccessToken = loginResult.AccessToken;
             tokenProvider.IdToken = loginResult.IdentityToken;
-            return loginResult;
+            currentUser = loginResult.User;
+
+            NotifyAuthenticationStateChanged(
+                Task.FromResult(new AuthenticationState(currentUser)));
         }
 
-        public async Task<BrowserResult> LogoutAsync()
+        public async Task LogoutAsync()
         {
             var logoutParameters = new Dictionary<string, string>
             {
@@ -65,9 +75,12 @@ namespace BlazorHybridApp.Auth0
                 DisplayMode = logoutRequest.BrowserDisplayMode
             };
 
-            var browserResult = await oidcClient.Options.Browser.InvokeAsync(browserOptions);
+            await oidcClient.Options.Browser.InvokeAsync(browserOptions);
 
-            return browserResult;
+            currentUser = new ClaimsPrincipal(new ClaimsIdentity());
+
+            NotifyAuthenticationStateChanged(
+                Task.FromResult(new AuthenticationState(currentUser)));
         }
     }
 }

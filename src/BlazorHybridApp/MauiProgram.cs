@@ -1,6 +1,7 @@
 ﻿using BlazorHybridApp.Auth0;
 using Core.Interface;
 using Core.Model;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebView.Maui;
 using Services;
 
@@ -20,16 +21,18 @@ namespace BlazorHybridApp
 
             builder.Services.AddMauiBlazorWebView();
 
-            #if DEBUG
+#if DEBUG
 		    builder.Services.AddBlazorWebViewDeveloperTools();
-            #endif
+#endif
+
+            builder.Services.AddAuthorizationCore();
 
             builder.Services.AddSingleton<TokenProvider>();
 
-            builder.Services.AddSingleton(sp =>
+            builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
             {
                 var tokenProvider = sp.GetRequiredService<TokenProvider>();
-                return new Auth0Client(new Auth0ClientOptions
+                return new Auth0AuthenticationStateProvider(new Auth0AuthenticationStateProviderOptions
                 {
                     Domain = "<YOUR_AUTH0_DOMAIN>",
                     ClientId = "<YOUR_CLIENT_ID>",

@@ -12,29 +12,17 @@
 
 @code {
     [Inject]
-    public Auth0Client auth0Client { get; set; }
+    public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
     private async Task LogIn(MouseEventArgs args)
     {
-        var loginResult = await auth0Client.LoginAsync();
-
-        if (!loginResult.IsError)
-        {
-            // successful
-        }
-
+        await ((Auth0AuthenticationStateProvider)AuthenticationStateProvider).LogInAsync();
         StateHasChanged();
     }
 
     private async Task LogOut(MouseEventArgs args)
     {
-        var logoutResult = await auth0Client.LogoutAsync();
-
-        if (!logoutResult.IsError)
-        {
-            // successful
-        }
-
+        await ((Auth0AuthenticationStateProvider)AuthenticationStateProvider).LogoutAsync();
         StateHasChanged();
     }
 }

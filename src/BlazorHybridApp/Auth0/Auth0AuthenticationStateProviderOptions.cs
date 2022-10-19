@@ -1,8 +1,8 @@
 ﻿namespace BlazorHybridApp.Auth0
 {
-    public class Auth0ClientOptions
+    public class Auth0AuthenticationStateProviderOptions
     {
-        public Auth0ClientOptions()
+        public Auth0AuthenticationStateProviderOptions()
         {
             Scope = "openid";
             RedirectUri = "myapp://callback";
