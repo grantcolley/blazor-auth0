@@ -26,24 +26,23 @@ namespace BlazorHybridApp
 #endif
 
             builder.Services.AddAuthorizationCore();
-
             builder.Services.AddSingleton<TokenProvider>();
+            builder.Services.AddScoped<Auth0AuthenticationStateProviderOptions>();
+            builder.Services.AddScoped<Auth0AuthenticationStateProvider>();
 
             builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
             {
                 var tokenProvider = sp.GetRequiredService<TokenProvider>();
-                return new Auth0AuthenticationStateProvider(new Auth0AuthenticationStateProviderOptions
-                {
-                    Domain = "<YOUR_AUTH0_DOMAIN>",
-                    ClientId = "<YOUR_CLIENT_ID>",
-                    Scope = "openid profile",
+                var auth0AuthenticationStateProviderOptions = sp.GetRequiredService<Auth0AuthenticationStateProviderOptions>();
 
-                    // https://github.com/dotnet/maui/issues/8382
-                    // RedirectUri = "http://localhost/callback"
+                auth0AuthenticationStateProviderOptions.Domain = "<YOUR_AUTH0_DOMAIN>";
+                auth0AuthenticationStateProviderOptions.ClientId = "<YOUR_CLIENT_ID>";
+                auth0AuthenticationStateProviderOptions.Scope = "openid profile";
+                auth0AuthenticationStateProviderOptions.RoleClaim = "role";
+                auth0AuthenticationStateProviderOptions.RedirectUri = "myapp://callback";
+                //auth0AuthenticationStateProviderOptions.RedirectUri = "http://localhost/callback"; // https://github.com/dotnet/maui/issues/8382
 
-                    RedirectUri = "myapp://callback"
-
-                }, tokenProvider);
+                return sp.GetRequiredService<Auth0AuthenticationStateProvider>();
             });
 
             builder.Services.AddHttpClient("webapi", client =>
