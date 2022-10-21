@@ -14,6 +14,7 @@ namespace BlazorHybridApp.Auth0
     {
         private readonly OidcClient oidcClient;
         private readonly TokenProvider tokenProvider;
+        private readonly Auth0AuthenticationStateProviderOptions options;
 
         private ClaimsPrincipal currentUser = new ClaimsPrincipal(new ClaimsIdentity());
 
@@ -28,6 +29,7 @@ namespace BlazorHybridApp.Auth0
                 Browser = options.Browser
             });
 
+            this.options = options;
             this.tokenProvider = tokenProvider;
         }
 
@@ -54,8 +56,24 @@ namespace BlazorHybridApp.Auth0
             tokenProvider.IdToken = loginResult.IdentityToken;
             currentUser = loginResult.User;
 
+            if (currentUser.Identity.IsAuthenticated)
+            {
+                var identity = (ClaimsIdentity)currentUser.Identity;
+                var roleClaims = identity.FindAll(identity.RoleClaimType).ToArray();
+
+                if (roleClaims != null && roleClaims.Any())
+                {
+                    foreach (var existingClaim in roleClaims)
+                    {
+                        identity.RemoveClaim(existingClaim);
+                    }
+                }
+
+                identity.AddClaim(new Claim(options.RoleClaim, "blazor-auth0"));
+            }
+
             NotifyAuthenticationStateChanged(
-                Task.FromResult(new AuthenticationState(currentUser)));
+            Task.FromResult(new AuthenticationState(currentUser)));
         }
 
         public async Task LogoutAsync()
