@@ -1,4 +1,5 @@
 ﻿using BlazorHybridApp.Auth0;
+using BlazorHybridApp.HttpDev;
 using Core.Interface;
 using Core.Model;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -45,10 +46,14 @@ namespace BlazorHybridApp
                 return sp.GetRequiredService<Auth0AuthenticationStateProvider>();
             });
 
+#if DEBUG
+            builder.Services.AddDevHttpClient("webapi", 7225);
+#else
             builder.Services.AddHttpClient("webapi", client =>
             {
                 client.BaseAddress = new Uri("https://localhost:7225");
             });
+#endif
 
             builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>(sp =>
             {
