@@ -38,6 +38,7 @@ namespace BlazorHybridApp
 
                 auth0AuthenticationStateProviderOptions.Domain = "<YOUR_AUTH0_DOMAIN>";
                 auth0AuthenticationStateProviderOptions.ClientId = "<YOUR_CLIENT_ID>";
+                auth0AuthenticationStateProviderOptions.Parameters.Add("audience", "<YOUR_AUDIENCE>");
                 auth0AuthenticationStateProviderOptions.Scope = "openid profile";
                 auth0AuthenticationStateProviderOptions.RoleClaim = "role";
                 auth0AuthenticationStateProviderOptions.RedirectUri = "myapp://callback";
