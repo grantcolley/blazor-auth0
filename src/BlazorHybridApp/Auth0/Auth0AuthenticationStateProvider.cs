@@ -60,17 +60,15 @@ namespace BlazorHybridApp.Auth0
             if (currentUser.Identity.IsAuthenticated)
             {
                 var identity = (ClaimsIdentity)currentUser.Identity;
-                var roleClaims = identity.FindAll(identity.RoleClaimType).ToArray();
+                var roleClaims = identity.FindAll(options.RoleClaim).ToArray();
 
                 if (roleClaims != null && roleClaims.Any())
                 {
                     foreach (var existingClaim in roleClaims)
                     {
-                        identity.RemoveClaim(existingClaim);
+                        identity.AddClaim(new Claim(identity.RoleClaimType, existingClaim.Value));
                     }
                 }
-
-                identity.AddClaim(new Claim(options.RoleClaim, "blazor-auth0"));
             }
 
             NotifyAuthenticationStateChanged(
