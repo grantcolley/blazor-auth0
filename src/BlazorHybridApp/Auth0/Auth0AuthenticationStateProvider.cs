@@ -50,7 +50,7 @@ namespace BlazorHybridApp.Auth0
 
         public async Task LogInAsync()
         {
-            var loginRequest = new LoginRequest { FrontChannelExtraParameters = new Parameters(options.Parameters) };
+            var loginRequest = new LoginRequest { FrontChannelExtraParameters = new Parameters(options.AdditionalProviderParameters) };
             var loginResult = await oidcClient.LoginAsync(loginRequest);
             tokenProvider.RefreshToken = loginResult.RefreshToken;
             tokenProvider.AccessToken = loginResult.AccessToken;
