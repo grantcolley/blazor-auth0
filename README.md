@@ -4,7 +4,7 @@ A solution for a Blazor Hybrid, Blazor WebAssembly App and a Blazor Server App a
 
 **blazor-auth0** is based on the [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) solution that uses [IdentityServer4](https://identityserver4.readthedocs.io/en/latest/) as its identity provider. This project will take a copy of [blazor-solution-setup](https://github.com/grantcolley/blazor-solution-setup) and strip out all references and code relating to [IdentityServer4](https://identityserver4.readthedocs.io/en/latest/) and replace it with [Auth0](https://auth0.com/).
 
-###### .NET 6.0, Blazor WebAssembly, Blazor Server, ASP.NET Core Web API, [Auth0](https://auth0.com/)
+###### .NET 6.0, MAUI Blazor WebAssembly, Blazor Server, ASP.NET Core Web API, [Auth0](https://auth0.com/)
 ###### 
 \
 [![Build status](https://ci.appveyor.com/api/projects/status/6wsbn17wlhuw2oqb?svg=true)](https://ci.appveyor.com/project/grantcolley/blazor-auth0)
