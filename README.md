@@ -796,4 +796,4 @@ Register the dev HttpClient in [MauiProgram.cs](https://github.com/grantcolley/b
 > - [WebAuthenticationBroker API that supports all WinAppSDK OS's and application types #441](https://github.com/microsoft/WindowsAppSDK/issues/441)
 > - [Web authenticator](https://learn.microsoft.com/en-us/dotnet/maui/platform-integration/communication/authentication?tabs=windows#get-started)
    
-   
+>NOTE: If there is a [NullReferenceException on CallbackResult](https://github.com/dotnet/maui/issues/3760) you may need to add the following part into your `AndroidManifest.xml` file between the `<manifest>` tags.
