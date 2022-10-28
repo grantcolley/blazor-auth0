@@ -25,8 +25,8 @@ A solution for a Blazor Hybrid, Blazor WebAssembly App and a Blazor Server App a
     * [Create the Auth0 Role](#create-the-auth0-role)
     * [Restrict the Client and WebApi](#restrict-the-client-and-webapi)
     * [Consume roles in the Blazor WASM Client](#consume-roles-in-the-blazor-wasm-client)
-9. [Running the Solution](#8-running-the-solution)
-10. [Adding .NET Maui Blazor Hybrid Client](#adding-net-maui-blazor-hybrid-client)
+8. [Running the Solution](#8-running-the-solution)
+9. [Maui Blazor Hybrid Client](#9-maui-blazor-hybrid-client)
 
 ## 1. Preparing the Solution
 
@@ -715,4 +715,4 @@ In the solution's properties window select Multiple startup projects and set the
 
 Compile and run the solution...
 
-## 10. Adding .NET Maui Blazor Hybrid Client
+## 9. Maui Blazor Hybrid Client
