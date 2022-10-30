@@ -41,8 +41,16 @@ namespace BlazorHybridApp
                 auth0AuthenticationStateProviderOptions.AdditionalProviderParameters.Add("audience", "<YOUR_AUDIENCE>");
                 auth0AuthenticationStateProviderOptions.Scope = "openid profile";
                 auth0AuthenticationStateProviderOptions.RoleClaim = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+
+#if WINDOWS
+                // https://github.com/dotnet/maui/issues/8382
+                auth0AuthenticationStateProviderOptions.RedirectUri = "http://localhost/callback";
+                auth0AuthenticationStateProviderOptions.PostLogoutRedirectUris = "http://localhost/callback";
+#else
                 auth0AuthenticationStateProviderOptions.RedirectUri = "myapp://callback";
-                //auth0AuthenticationStateProviderOptions.RedirectUri = "http://localhost/callback"; // https://github.com/dotnet/maui/issues/8382
+                auth0AuthenticationStateProviderOptions.PostLogoutRedirectUris = "myapp://callback";
+#endif
+
 
                 return sp.GetRequiredService<Auth0AuthenticationStateProvider>();
             });
