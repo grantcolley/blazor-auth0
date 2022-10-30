@@ -26,6 +26,7 @@ namespace BlazorHybridApp.Auth0
                 ClientId = options.ClientId,
                 Scope = options.Scope,
                 RedirectUri = options.RedirectUri,
+                PostLogoutRedirectUri = options.PostLogoutRedirectUris,
                 Browser = options.Browser
             });
 
